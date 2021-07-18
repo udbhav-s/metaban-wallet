@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik:wght@500;700&family=Source+Sans+Pro:wght@200;400;600&display=swap');
+
+.heading {
+  font-family: Rubik, sans-serif;
+  font-weight: bold;
+}
+
+html, body {
+  background-color: var(--bg-black-primary);
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+.yellow-gradient-text {
+  background: linear-gradient(
+    90deg,
+    hsla(58, 100%, 68%, 1) 0%,
+    var(--yellow-primary) 100%
+  );
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.primary-yellow-text {
+  color: var(--yellow-primary);
+}
+
+/* empty button */
+button.empty-button {
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+button.empty-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+button.empty-button:active {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* KEYFRAMES */
+
+@keyframes fade-up {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
