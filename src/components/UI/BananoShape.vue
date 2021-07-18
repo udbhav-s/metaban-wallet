@@ -35,9 +35,9 @@ export default defineComponent({
     onMounted(() => {
       window.addEventListener("mousemove", (e) => {
         rotateY.value = (e.x / window.innerWidth - 0.5) * 40;
-        rotateX.value = (e.y / window.innerHeight - 0.5) * 40;
+        rotateX.value = -1 * (e.y / window.innerHeight - 0.5) * 40;
         translate3dX.value = (e.x / window.innerWidth - 0.5) * 30;
-        translate3dY.value = -1 * (e.y / window.innerHeight - 0.5) * 40;
+        translate3dY.value = (e.y / window.innerHeight - 0.5) * 40;
       });
     });
 

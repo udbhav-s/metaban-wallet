@@ -10,6 +10,13 @@ html, body {
   font-family: 'Source Sans Pro', sans-serif;
 }
 
+.container {
+  max-width: 800px;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  margin: auto;
+}
+
 .yellow-gradient-text {
   background: linear-gradient(
     90deg,
@@ -24,18 +31,48 @@ html, body {
   color: var(--yellow-primary);
 }
 
+button {
+  cursor: pointer;
+  padding: 0.5rem;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
 /* empty button */
 button.empty-button {
   border: none;
   background: none;
-  cursor: pointer;
-  padding: 0.5rem;
 }
-button.empty-button:hover {
+button.empty-button:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.1);
 }
 button.empty-button:active {
   background: rgba(255, 255, 255, 0.2);
+}
+
+/* outlined button */
+button.outlined-button {
+  border: 1px solid var(--yellow-primary);
+  background: none;
+  color: var(--yellow-primary);
+}
+button.outlined-button:hover:not(:disabled) {
+  color: var(--bg-black-primary);
+  background-color: var(--yellow-primary);
+}
+
+/* route transition */
+.slide-fade-enter-active, .slide-fade-leave-active {
+  transition: 0.3s ease;
+}
+.slide-fade-enter-from {
+  opacity: 0;
+  transform: translateX(10px);
+}
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
 }
 
 /* KEYFRAMES */
@@ -48,5 +85,29 @@ button.empty-button:active {
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: scale(1);
+  }
+  10% {
+    transform: scale(1.1);
+  }
+  20% {
+    transform: scale(1.1) translateX(-10px);
+  }
+  40% {
+    transform: scale(1.1) translateX(10px);
+  }
+  60% {
+    transform: scale(1.1) translateX(-10px)
+  }
+  80% {
+    transform: scale(1.1) translateX(10px);
+  }
+  100% {
+    transform: scale(1);
   }
 }

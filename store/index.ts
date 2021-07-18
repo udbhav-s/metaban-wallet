@@ -2,6 +2,7 @@ import { reactive } from "vue";
 
 export const store = reactive({
   seed: "",
+  lastUsedIndex: 0,
 });
 
 export const storeUtil = {
