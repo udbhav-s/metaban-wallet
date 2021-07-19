@@ -5,6 +5,14 @@ import {
   faExclamationTriangle,
   faCopy,
   faArrowLeft,
+  faArrowRight,
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faPlus, faDownload, faExclamationTriangle, faCopy, faArrowLeft);
+library.add(
+  faPlus,
+  faDownload,
+  faExclamationTriangle,
+  faCopy,
+  faArrowLeft,
+  faArrowRight
+);

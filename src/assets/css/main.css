@@ -7,6 +7,7 @@
 
 html, body {
   background-color: var(--bg-black-primary);
+  color: var(--text-primary);
   font-family: 'Source Sans Pro', sans-serif;
 }
 
@@ -31,6 +32,10 @@ html, body {
   color: var(--yellow-primary);
 }
 
+.warning-text {
+  color: var(--red-primary);
+}
+
 button {
   cursor: pointer;
   padding: 0.5rem;
@@ -43,11 +48,12 @@ button:disabled {
 button.empty-button {
   border: none;
   background: none;
+  color: var(--yellow-primary);
 }
 button.empty-button:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.1);
 }
-button.empty-button:active {
+button.empty-button:active:not(:disabled) {
   background: rgba(255, 255, 255, 0.2);
 }
 
@@ -60,6 +66,14 @@ button.outlined-button {
 button.outlined-button:hover:not(:disabled) {
   color: var(--bg-black-primary);
   background-color: var(--yellow-primary);
+}
+
+input[type="text"],
+input[type="password"] {
+  padding: 0.5rem;
+  background-color: var(---bg-black-primary);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 /* route transition */
@@ -75,7 +89,7 @@ button.outlined-button:hover:not(:disabled) {
   transform: translateX(-20px);
 }
 
-/* KEYFRAMES */
+/* ANIMATIONS */
 
 @keyframes fade-up {
   0% {
@@ -93,21 +107,30 @@ button.outlined-button:hover:not(:disabled) {
     transform: scale(1);
   }
   10% {
-    transform: scale(1.1);
+    transform: scale(1.05);
   }
   20% {
-    transform: scale(1.1) translateX(-10px);
+    transform: scale(1.05) translateX(-10px);
   }
   40% {
-    transform: scale(1.1) translateX(10px);
+    transform: scale(1.05) translateX(10px);
   }
   60% {
-    transform: scale(1.1) translateX(-10px)
+    transform: scale(1.05) translateX(-10px)
   }
   80% {
-    transform: scale(1.1) translateX(10px);
+    transform: scale(1.05) translateX(10px);
   }
   100% {
     transform: scale(1);
+  }
+}
+
+@keyframes shape-loading {
+  0% {
+    transform: rotateY(0deg);
+  }
+  100% {
+    transform: rotateY(360deg);
   }
 }

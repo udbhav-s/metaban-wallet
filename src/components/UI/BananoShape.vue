@@ -1,8 +1,12 @@
 <template>
-  <div class="shape-container">
+  <div :class="[loader ? 'loading' : '']" class="shape-container">
     <div
       class="shape"
-      :style="`transform: rotateX(${rotateX}deg) rotateY(${rotateY}deg) translate3d(${translate3dX}px, ${translate3dY}px, 0px)`"
+      :style="
+        !loader
+          ? `transform: rotateX(${rotateX}deg) rotateY(${rotateY}deg) translate3d(${translate3dX}px, ${translate3dY}px, 0px)`
+          : ''
+      "
     >
       <div class="outer-circle-1 circle">
         <svg
@@ -26,20 +30,33 @@ import { defineComponent, onMounted, ref } from "vue";
 
 export default defineComponent({
   name: "BananoShape",
-  setup() {
+  props: {
+    mouseControlled: {
+      type: Boolean,
+      required: false,
+    },
+    loader: {
+      type: Boolean,
+      required: false,
+    },
+  },
+
+  setup(props) {
     const rotateX = ref(10); // on X axis
     const rotateY = ref(10); // on Y axis
     const translate3dX = ref(0);
     const translate3dY = ref(0);
 
-    onMounted(() => {
-      window.addEventListener("mousemove", (e) => {
-        rotateY.value = (e.x / window.innerWidth - 0.5) * 40;
-        rotateX.value = -1 * (e.y / window.innerHeight - 0.5) * 40;
-        translate3dX.value = (e.x / window.innerWidth - 0.5) * 30;
-        translate3dY.value = (e.y / window.innerHeight - 0.5) * 40;
+    if (props.mouseControlled) {
+      onMounted(() => {
+        window.addEventListener("mousemove", (e) => {
+          rotateY.value = (e.x / window.innerWidth - 0.5) * 40;
+          rotateX.value = -1 * (e.y / window.innerHeight - 0.5) * 40;
+          translate3dX.value = (e.x / window.innerWidth - 0.5) * 30;
+          translate3dY.value = (e.y / window.innerHeight - 0.5) * 40;
+        });
       });
-    });
+    }
 
     return {
       rotateX,
@@ -52,16 +69,21 @@ export default defineComponent({
 </script>
 
 <style scoped>
+/* font-size is used to control size of shape with em  */
+
 .shape-container {
   margin-left: auto;
   margin-right: auto;
-  max-width: 200px;
+  max-width: 20em;
   position: relative;
   perspective: 800px;
 }
 
 .shape {
   transform-style: preserve-3d;
+}
+.loading .shape {
+  animation: shape-loading 1s ease infinite;
 }
 
 .circle {
@@ -74,8 +96,8 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 200px;
-  height: 200px;
+  width: 20em;
+  height: 20em;
 }
 
 .outer-circle-2 {
@@ -84,13 +106,13 @@ export default defineComponent({
   left: 0;
   width: 100%;
   height: 100%;
-  transform: translateZ(-50px);
+  transform: translateZ(-5em);
 }
 
 .banano-shape {
   fill: transparent;
   stroke: var(--yellow-primary);
   stroke-width: 20;
-  max-width: 130px;
+  max-width: 13em;
 }
 </style>

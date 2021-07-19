@@ -4,12 +4,25 @@
       <div>
         <transition name="slide-fade" mode="out-in">
           <div v-if="route === 'Home'" class="home">
-            <banano-shape class="logo" />
+            <banano-shape :mouseControlled="true" class="logo" />
             <app-heading class="animated heading" />
             <p>
               Own and manage NFTs on the
               <span class="primary-yellow-text">Banano</span> chain
             </p>
+            <div v-if="hasSeed" class="password-field">
+              <form @submit.prevent="submitPassword">
+                <input
+                  v-model="password"
+                  type="password"
+                  required
+                  placeholder="Enter password"
+                />
+                <button type="submit" class="password-button empty-button">
+                  <fa-icon icon="arrow-right" />
+                </button>
+              </form>
+            </div>
             <div class="buttons">
               <button class="empty-button" @click="importSeed">
                 <fa-icon class="icon" icon="download" />Import Seed
@@ -32,11 +45,13 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import AppHeading from "@/components/UI/AppHeading.vue";
 import BananoShape from "@/components/UI/BananoShape.vue";
 import NewSeed from "@/components/NewSeed.vue";
+import { storeUtil } from "@/store";
+import { bananoUtil } from "@/util/banano";
 
 export default defineComponent({
   name: "Home",
@@ -53,10 +68,26 @@ export default defineComponent({
     const newSeed = () => router.push({ name: "NewSeed" });
     const importSeed = () => router.push({ name: "ImportSeed" });
 
+    const hasSeed = ref(false);
+    const encryptedSeed = storeUtil.getters.loadEncryptedSeed() as string;
+    if (encryptedSeed) hasSeed.value = true;
+
+    const password = ref("");
+    const submitPassword = () => {
+      const seed = bananoUtil.decryptSeed(encryptedSeed, password.value);
+      if (!bananoUtil.isSeedValid(seed)) throw new Error("invalid password");
+      storeUtil.mutations.loadSeed(password.value);
+
+      router.push({ name: "Dashboard" });
+    };
+
     return {
       route,
+      hasSeed,
       newSeed,
       importSeed,
+      password,
+      submitPassword,
     };
   },
 });
@@ -65,17 +96,26 @@ export default defineComponent({
 <style>
 .hero-section {
   text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  color: white;
+  margin-top: 7rem;
   font-size: 1.2rem;
 }
 
+.hero-section > div {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.home .logo {
+  font-size: 10px;
+}
+
 .home .heading {
-  font-size: 3rem;
+  font-size: 2.4rem;
   margin-top: 5rem;
+}
+
+.home p {
+  color: var(--text-secondary);
 }
 
 .home p span {
@@ -92,8 +132,14 @@ export default defineComponent({
   max-width: 400px;
 }
 
+.home .password-field {
+  margin-top: 2rem;
+}
+.home .password-button {
+  margin-left: 1rem;
+}
+
 .home .buttons button {
-  color: var(--yellow-primary);
   animation: fade-up 0.5s ease;
 }
 .home .buttons button:nth-child(2) {
