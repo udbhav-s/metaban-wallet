@@ -10,7 +10,12 @@
               Own and manage NFTs on the
               <span class="primary-yellow-text">Banano</span> chain
             </p>
-            <div v-if="hasSeed" class="password-field">
+            <div v-if="seed">
+              <router-link to="/dashboard">
+                <button class="outlined-button">Go to wallet</button>
+              </router-link>
+            </div>
+            <div v-else-if="hasSeed" class="password-field">
               <form @submit.prevent="submitPassword">
                 <input
                   v-model="password"
@@ -64,6 +69,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const route = computed(() => router.currentRoute.value.name);
+    const seed = computed(() => storeUtil.getters.seed);
 
     const newSeed = () => router.push({ name: "NewSeed" });
     const importSeed = () => router.push({ name: "ImportSeed" });
@@ -83,6 +89,7 @@ export default defineComponent({
 
     return {
       route,
+      seed,
       hasSeed,
       newSeed,
       importSeed,

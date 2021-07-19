@@ -17,9 +17,7 @@
           </p>
           <div class="seed">
             {{ seed }}
-            <button @click="copySeed" class="empty-button">
-              <fa-icon icon="copy" />
-            </button>
+            <copy-button :copyText="seed" />
           </div>
           <div class="field">
             <input
@@ -86,6 +84,7 @@ import { defineComponent, ref } from "vue";
 import { bananoUtil } from "@/util/banano";
 import { useRouter } from "vue-router";
 import { storeUtil } from "@/store";
+import CopyButton from "@/components/UI/CopyButton.vue";
 
 export default defineComponent({
   name: "NewSeed",
@@ -95,11 +94,14 @@ export default defineComponent({
       required: false,
     },
   },
+  components: {
+    CopyButton,
+  },
+
   setup(props) {
     const seed = ref("");
     if (!props.importSeed) seed.value = bananoUtil.generateRandomSeed();
     const seedDisclaimer = ref(false);
-    const copySeed = () => navigator.clipboard.writeText(seed.value);
 
     const viewPage = ref("seed");
     const setSeed = () => (viewPage.value = "password");
@@ -123,7 +125,6 @@ export default defineComponent({
       passwordCopy,
       goBack,
       backToSeed,
-      copySeed,
       setSeed,
       setPassword,
     };

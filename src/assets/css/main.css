@@ -18,6 +18,10 @@ html, body {
   margin: auto;
 }
 
+a {
+  text-decoration: none;
+}
+
 .yellow-gradient-text {
   background: linear-gradient(
     90deg,
@@ -30,6 +34,10 @@ html, body {
 
 .primary-yellow-text {
   color: var(--yellow-primary);
+}
+
+.secondary-text {
+  color: var(--text-secondary);
 }
 
 .warning-text {

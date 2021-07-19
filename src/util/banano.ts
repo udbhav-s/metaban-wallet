@@ -28,15 +28,22 @@ export const bananoUtil = {
   },
 
   async loadAccountAtIndex(seed: string, index: number): Promise<BanAccount> {
+    const account = {} as BanAccount;
+
     const privateKey = bananojs.getPrivateKey(seed, index);
     const publicKey = await bananojs.getPublicKey(privateKey);
-    const address = bananojs.getBananoAccount(publicKey);
-    const info = await bananojs.getAccountInfo(address);
 
-    return {
-      address: address,
-      opened: info.error ? false : true,
-    };
+    const address = bananojs.getBananoAccount(publicKey);
+    account.address = address;
+
+    const info = await bananojs.getAccountInfo(address);
+    if (!info.error) {
+      account.opened = true;
+      const balance = bananojs.getBananoPartsFromRaw(info.balance);
+      account.balance = `${balance.banano}.${balance.banoshi}`;
+    } else account.opened = false;
+
+    return account;
   },
 
   async loadAccounts(seed: string): Promise<BanAccount[]> {

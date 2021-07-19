@@ -4,6 +4,7 @@ import { bananoUtil } from "@/util/banano";
 export interface BanAccount {
   address: string;
   opened?: boolean;
+  balance?: string;
 }
 
 export const store = reactive({
@@ -44,6 +45,17 @@ export const storeUtil = {
       this.setSeed(seed);
       const encryptedSeed = bananoUtil.encryptSeed(seed, password);
       localStorage.setItem("encryptedSeed", encryptedSeed);
+    },
+
+    async addAccount(): Promise<BanAccount> {
+      const seed = storeUtil.getters.seed();
+      const accounts = storeUtil.getters.accounts();
+      const account = await bananoUtil.loadAccountAtIndex(
+        seed,
+        accounts.length
+      );
+      store.accounts.push(account);
+      return account;
     },
 
     async loadAccounts(): Promise<void> {
