@@ -69,7 +69,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const route = computed(() => router.currentRoute.value.name);
-    const seed = computed(() => storeUtil.getters.seed);
+    const seed = computed(storeUtil.getters.seed);
 
     const newSeed = () => router.push({ name: "NewSeed" });
     const importSeed = () => router.push({ name: "ImportSeed" });

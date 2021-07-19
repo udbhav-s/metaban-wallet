@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import { storeUtil, store } from "@/store";
+import { storeUtil } from "@/store";
 import { computed, defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import BananoShape from "@/components/UI/BananoShape.vue";
@@ -83,7 +83,7 @@ export default defineComponent({
     const router = useRouter();
     if (!storeUtil.getters.seed()) router.push("/");
 
-    const accounts = computed(() => store.accounts);
+    const accounts = computed(storeUtil.getters.accounts);
     const selectedAccountIndex = ref(0);
     const selectedAccount = computed(() => {
       if (accounts.value && accounts.value[selectedAccountIndex.value])
