@@ -33,6 +33,7 @@
           <div class="field">
             <input type="text" v-model="seed" placeholder="Enter seed" />
           </div>
+          <div v-if="invalidSeed" class="warning-text">Invalid Seed</div>
         </div>
         <button
           @click="setSeed"
@@ -104,7 +105,13 @@ export default defineComponent({
     const seedDisclaimer = ref(false);
 
     const viewPage = ref("seed");
-    const setSeed = () => (viewPage.value = "password");
+    const invalidSeed = ref(false);
+    const setSeed = () => {
+      if (bananoUtil.isSeedValid(seed.value)) {
+        invalidSeed.value = false;
+        viewPage.value = "password";
+      } else invalidSeed.value = true;
+    };
 
     const router = useRouter();
     const goBack = () => router.push({ name: "Home" });
@@ -127,6 +134,7 @@ export default defineComponent({
       backToSeed,
       setSeed,
       setPassword,
+      invalidSeed,
     };
   },
 });
