@@ -88,7 +88,7 @@ export default defineComponent({
   padding-top: 1rem;
 }
 
-.content {
+.remote-sign .content {
   width: 100%;
   flex: 1;
   display: flex;
@@ -97,12 +97,12 @@ export default defineComponent({
   margin-bottom: 3rem;
 }
 
-.content .loading-container .heading {
+.remote-sign .content .loading-container .heading {
   font-size: 1.5rem;
   margin-bottom: 2rem;
 }
 
-.content .loading-container .loader {
+.remote-sign .content .loading-container .loader {
   font-size: 7px;
 }
 </style>
