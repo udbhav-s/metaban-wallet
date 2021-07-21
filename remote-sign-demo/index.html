@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Metaban Remote Sign</title>
+  <script>
+    window.onload = () => {
+      const button = document.getElementById("button");
+      const input = document.getElementById("hash");
+      const url = document.getElementById("url");
+      const resultElement = document.getElementById("result");
+
+      let metabanWindow;
+
+      button.onclick = () => {
+        metabanWindow = window.open(url.value + "/sign", "MetaBan Popup", "height=800,width=600");
+        window.metabanWindow = metabanWindow;
+        window.addEventListener("message", (e) => {
+          console.log(e);
+          if (e.origin === url.value && e.data === "ready") {
+            console.log("sending message");
+            metabanWindow.postMessage({
+              metabanSignData: {
+                type: "hash",
+                hash: input.value
+              }
+            }, "*");
+          }
+        });
+      }
+
+      window.addEventListener("message", (e) => {
+        if (e.origin === url.value && e.data.result) {
+          console.log(e);
+          resultElement.textContent = e.data.result;
+          metabanWindow.close();
+        }
+      });
+    };
+  </script>
+</head>
+<body>
+  <h1>Metaban Signing</h1>
+  <input type="text" id="url" placeholder="metaban wallet url" value="http://localhost:8080" />
+  <input type="text" id="hash" placeholder="enter hash to sign" />
+  <button id="button">Sign</button>
+  <div id="result"></div>
+</body>
+</html>

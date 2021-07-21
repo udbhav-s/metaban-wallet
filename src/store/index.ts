@@ -1,11 +1,6 @@
 import { reactive } from "vue";
 import { bananoUtil } from "@/util/banano";
-
-export interface BanAccount {
-  address: string;
-  opened?: boolean;
-  balance?: string;
-}
+import { BanAccount } from "@/types";
 
 export const store = reactive({
   seed: "",
@@ -16,8 +11,8 @@ export const store = reactive({
 export const storeUtil = {
   getters: {
     seed: (): string => store.seed,
-
     accounts: (): BanAccount[] => store.accounts,
+    lastUsedIndex: (): number => store.lastUsedIndex,
 
     loadEncryptedSeed(): string | null {
       return localStorage.getItem("encryptedSeed");
@@ -25,6 +20,17 @@ export const storeUtil = {
   },
 
   mutations: {
+    loadLastUsedIndex(): void {
+      store.lastUsedIndex = parseInt(
+        localStorage.getItem("lastUsedIndex") ?? "0"
+      );
+    },
+
+    setLastUsedIndex(index: number): void {
+      store.lastUsedIndex = index;
+      localStorage.setItem("lastUsedIndex", index.toString());
+    },
+
     loadSeed(password: string): void {
       const encryptedSeed = storeUtil.getters.loadEncryptedSeed();
       if (!encryptedSeed) throw new Error("No seed found in local storage");

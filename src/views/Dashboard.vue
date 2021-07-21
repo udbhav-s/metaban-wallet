@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="loadingAccounts" class="banano-loader-container">
+    <div v-if="!accounts" class="banano-loader-container">
       <banano-shape :loader="true" class="banano-loader" />
     </div>
     <div v-else>
@@ -91,14 +91,6 @@ export default defineComponent({
       else return undefined;
     });
 
-    const loadingAccounts = ref(false);
-    if (accounts.value.length === 0) {
-      loadingAccounts.value = true;
-      storeUtil.mutations
-        .loadAccounts()
-        .then(() => (loadingAccounts.value = false));
-    }
-
     const loadingNewAccount = ref(false);
     const addAccount = async () => {
       loadingNewAccount.value = true;
@@ -108,7 +100,6 @@ export default defineComponent({
 
     return {
       accounts,
-      loadingAccounts,
       selectedAccountIndex,
       selectedAccount,
       loadingNewAccount,

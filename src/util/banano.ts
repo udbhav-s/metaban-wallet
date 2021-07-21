@@ -1,7 +1,7 @@
 import AES from "crypto-js/aes";
 import Utf8 from "crypto-js/enc-utf8";
 import * as bananojs from "@bananocoin/bananojs";
-import { BanAccount } from "@/store";
+import { BanAccount, Transaction } from "@/types";
 
 function toHex(buffer: Uint8Array) {
   return Array.prototype.map
@@ -25,6 +25,25 @@ export const bananoUtil = {
   isSeedValid(seed: string): boolean {
     const { valid }: { valid: boolean } = bananojs.bananoUtil.isSeedValid(seed);
     return valid;
+  },
+
+  signHash(hash: string, seed: string, index: number): string {
+    const privateKey = bananojs.getPrivateKey(seed, index);
+    return bananojs.signHash(privateKey, hash);
+  },
+
+  async sendTransaction(
+    transaction: Transaction,
+    seed: string,
+    index: number
+  ): Promise<string> {
+    return await bananojs.sendAmountToBananoAccountWithRepresentativeAndPrevious(
+      seed,
+      index,
+      transaction.destination,
+      transaction.amount,
+      transaction.representative
+    );
   },
 
   async loadAccountAtIndex(seed: string, index: number): Promise<BanAccount> {

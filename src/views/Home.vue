@@ -60,13 +60,19 @@ import { bananoUtil } from "@/util/banano";
 
 export default defineComponent({
   name: "Home",
+  props: {
+    redirect: {
+      type: String,
+      required: false,
+    },
+  },
   components: {
     AppHeading,
     BananoShape,
     NewSeed,
   },
 
-  setup() {
+  setup(props) {
     const router = useRouter();
     const route = computed(() => router.currentRoute.value.name);
     const seed = computed(storeUtil.getters.seed);
@@ -82,9 +88,13 @@ export default defineComponent({
     const submitPassword = () => {
       const seed = bananoUtil.decryptSeed(encryptedSeed, password.value);
       if (!bananoUtil.isSeedValid(seed)) throw new Error("invalid password");
-      storeUtil.mutations.loadSeed(password.value);
 
-      router.push({ name: "Dashboard" });
+      storeUtil.mutations.loadSeed(password.value);
+      storeUtil.mutations.loadAccounts();
+
+      if (props.redirect) {
+        router.push(props.redirect);
+      } else router.push({ name: "Dashboard" });
     };
 
     return {

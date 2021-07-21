@@ -1,11 +1,16 @@
+import { storeUtil } from "@/store";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
+import RemoteSign from "@/views/RemoteSign.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "Home",
     component: Home,
+    props: (route) => ({
+      redirect: route.query.redirect,
+    }),
   },
   {
     path: "/new-seed",
@@ -26,11 +31,30 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(/* webpackChunkName: "dashboard" */ "../views/Dashboard.vue"),
   },
+  {
+    path: "/sign",
+    name: "Sign",
+    component: RemoteSign,
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.name !== "Home") {
+    if (storeUtil.getters.seed()) next();
+    else {
+      next({
+        name: "Home",
+        query: {
+          redirect: to.fullPath,
+        },
+      });
+    }
+  } else next();
 });
 
 export default router;

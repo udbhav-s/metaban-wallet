@@ -1,5 +1,5 @@
 <template>
-  <div class="app-heading">
+  <div class="app-heading heading">
     <span class="meta-text-container">
       <span class="meta-text">Meta</span>
     </span>
