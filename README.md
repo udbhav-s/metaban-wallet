@@ -1,4 +1,4 @@
-# metanode-wallet
+# metaban-wallet
 
 ## Project setup
 ```
