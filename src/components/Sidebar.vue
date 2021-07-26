@@ -16,7 +16,7 @@
             :class="[address === account.address ? 'active' : '']"
             class="account"
           >
-            <img
+            <image-loader
               :src="`https://monkey.banano.cc/api/v1/monkey/${account.address}`"
             />
             <div class="address">{{ account.address }}</div>
@@ -39,6 +39,7 @@
 import { computed, defineComponent, ref } from "vue";
 import AppHeading from "@/components/UI/AppHeading.vue";
 import BananoShape from "@/components/UI/BananoShape.vue";
+import ImageLoader from "@/components/UI/ImageLoader.vue";
 import { storeUtil } from "@/store";
 import { useRouter } from "vue-router";
 
@@ -47,6 +48,7 @@ export default defineComponent({
   components: {
     AppHeading,
     BananoShape,
+    ImageLoader,
   },
 
   setup() {
@@ -89,6 +91,7 @@ export default defineComponent({
 <style>
 .sidebar {
   position: fixed;
+  z-index: 3;
   top: 0;
   left: calc(-1 * var(--sidebar-width));
   height: 100%;
@@ -157,17 +160,27 @@ export default defineComponent({
   color: var(--text-secondary);
   padding: 5px;
   cursor: pointer;
+  border-radius: 10px;
+}
+
+.sidebar .account:not(.active):hover {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .sidebar .account.active {
   background-color: rgba(255, 255, 255, 0.08);
   color: var(--text-primary);
-  border-radius: 10px;
 }
 
 .sidebar .account img {
   width: 2.5rem;
   height: 2.5rem;
+}
+.sidebar .account .image-placeholder {
+  margin: 0.4rem;
+}
+.sidebar .account .image-placeholder img {
+  margin: -0.4rem;
 }
 
 .sidebar .account .address {

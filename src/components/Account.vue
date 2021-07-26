@@ -1,7 +1,9 @@
 <template>
   <div v-if="account">
     <div class="account-info">
-      <img :src="`https://monkey.banano.cc/api/v1/monkey/${account.address}`" />
+      <image-loader
+        :src="`https://monkey.banano.cc/api/v1/monkey/${account.address}`"
+      />
       <div class="account-info-content">
         <div class="address">
           {{ account.address }}
@@ -25,8 +27,9 @@
 
 <script lang="ts">
 import { computed, defineComponent } from "vue";
-import CopyButton from "@/components/UI/CopyButton.vue";
 import { storeUtil } from "@/store";
+import CopyButton from "@/components/UI/CopyButton.vue";
+import ImageLoader from "@/components/UI/ImageLoader.vue";
 
 export default defineComponent({
   name: "Account",
@@ -38,6 +41,7 @@ export default defineComponent({
   },
   components: {
     CopyButton,
+    ImageLoader,
   },
 
   setup(props) {
@@ -73,6 +77,15 @@ export default defineComponent({
   background: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
   padding: 1rem;
+}
+
+.account-info .image-placeholder {
+  margin: 0.7rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+.account-info .image-placeholder img {
+  margin: -0.7rem;
 }
 
 /* Desktop */
