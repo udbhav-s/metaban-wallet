@@ -22,7 +22,7 @@
 .app-heading {
   color: white;
   font-weight: bold;
-  font-style: Rubik, sans-serif;
+  font-family: Rubik, sans-serif;
 }
 
 .meta-text-container {

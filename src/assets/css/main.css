@@ -1,8 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@500;700&family=Source+Sans+Pro:wght@200;400;600&display=swap');
 
+:root {
+  --sidebar-width: 18em;
+  --sidebar-trigger-height: 3em;
+}
+
 .heading {
   font-family: Rubik, sans-serif;
   font-weight: bold;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 html, body {

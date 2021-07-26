@@ -6,6 +6,7 @@ import {
   faCopy,
   faArrowLeft,
   faArrowRight,
+  faBars,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -14,5 +15,6 @@ library.add(
   faExclamationTriangle,
   faCopy,
   faArrowLeft,
-  faArrowRight
+  faArrowRight,
+  faBars
 );
