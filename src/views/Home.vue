@@ -28,6 +28,9 @@
                 </button>
               </form>
             </div>
+            <div v-if="invalidPassword" class="warning-text invalid-password">
+              Invalid password. Please try again
+            </div>
             <div class="buttons">
               <button class="empty-button" @click="importSeed">
                 <fa-icon class="icon" icon="download" />Import Seed
@@ -85,9 +88,17 @@ export default defineComponent({
     if (encryptedSeed) hasSeed.value = true;
 
     const password = ref("");
+    const invalidPassword = ref(false);
     const submitPassword = () => {
-      const seed = bananoUtil.decryptSeed(encryptedSeed, password.value);
-      if (!bananoUtil.isSeedValid(seed)) throw new Error("invalid password");
+      invalidPassword.value = false;
+
+      try {
+        const seed = bananoUtil.decryptSeed(encryptedSeed, password.value);
+        if (!bananoUtil.isSeedValid(seed)) throw new Error("invalid password");
+      } catch {
+        invalidPassword.value = true;
+        return;
+      }
 
       storeUtil.mutations.loadSeed(password.value);
       storeUtil.mutations.loadAccounts();
@@ -104,6 +115,7 @@ export default defineComponent({
       newSeed,
       importSeed,
       password,
+      invalidPassword,
       submitPassword,
     };
   },
@@ -154,6 +166,10 @@ export default defineComponent({
 }
 .home .password-button {
   margin-left: 1rem;
+}
+
+.home .invalid-password {
+  margin-top: 0.5rem;
 }
 
 .home .buttons button {
