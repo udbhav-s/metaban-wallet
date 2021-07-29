@@ -1,15 +1,13 @@
 <template>
   <img v-show="loaded" @load="loaded = true" :src="src" />
   <div v-if="!loaded" class="image-placeholder">
-    <img
-      src='data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500"></svg>'
-    />
+    <img :src="dataUrl" />
     <div></div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 
 export default defineComponent({
   name: "ImageLoader",
@@ -18,11 +16,24 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    width: {
+      type: Number,
+      required: false,
+    },
+    height: {
+      type: Number,
+      required: false,
+    },
   },
 
-  setup() {
+  setup(props) {
     const loaded = ref(false);
-    return { loaded };
+    const dataUrl = computed(
+      () =>
+        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg"
+        width="${props.width ?? 500}" height="${props.height ?? 500}"></svg>`
+    );
+    return { loaded, dataUrl };
   },
 });
 </script>
