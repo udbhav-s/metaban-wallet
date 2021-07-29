@@ -25,6 +25,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/dashboard",
     name: "Dashboard",
+    meta: {
+      requiresAuth: true,
+    },
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
@@ -46,6 +49,9 @@ const routes: Array<RouteRecordRaw> = [
     path: "/sign",
     name: "Sign",
     component: RemoteSign,
+    meta: {
+      requiresAuth: true,
+    },
   },
 ];
 
@@ -55,7 +61,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.name !== "Home") {
+  if (to.meta?.requiresAuth) {
     if (storeUtil.getters.seed()) next();
     else {
       next({
