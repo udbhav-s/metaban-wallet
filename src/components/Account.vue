@@ -150,19 +150,21 @@ export default defineComponent({
       sendNftAsset.value = undefined;
     };
 
-    const receivingNft = ref(false);
     const receiveNftAsset = async (nft: Asset) => {
-      receivingNft.value = true;
+      nft.receiving = true;
+      if (!nft.history) return;
 
-      bananoUtil.receiveBlock(
-        seed.value,
-        accountIndex.value,
-        nft.asset,
-        account.value?.representative
-      );
+      nft.history[nft.history.length - 1].receive = (
+        await bananoUtil.receiveBlock(
+          seed.value,
+          accountIndex.value,
+          nft.history[nft.history.length - 1].send,
+          account.value?.representative
+        )
+      ).receiveBlocks[0];
 
       nft.received = "true";
-      receivingNft.value = false;
+      nft.receiving = false;
     };
 
     return {
@@ -173,7 +175,6 @@ export default defineComponent({
       sendNftAsset,
       getImageUrl,
       closeModal,
-      receivingNft,
       receiveNftAsset,
       loadNfts,
     };

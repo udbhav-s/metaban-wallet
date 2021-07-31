@@ -96,7 +96,7 @@ export const bananoUtil = {
     index: number,
     hash: string,
     rep?: string
-  ): Promise<string> {
+  ): Promise<{ receiveBlocks: string[] }> {
     return await bananojs.receiveBananoDepositsForSeed(
       seed,
       index,
