@@ -1,7 +1,7 @@
 <template>
-  <button @click="copy" class="empty-button">
+  <app-button empty @click="copy">
     <fa-icon icon="copy" />
-  </button>
+  </app-button>
 </template>
 
 <script lang="ts">

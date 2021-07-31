@@ -12,7 +12,7 @@
             </p>
             <div v-if="seed">
               <router-link to="/dashboard">
-                <button class="outlined-button">Go to wallet</button>
+                <app-button outlined>Go to wallet</app-button>
               </router-link>
             </div>
             <div v-else-if="hasSeed" class="password-field">
@@ -23,21 +23,21 @@
                   required
                   placeholder="Enter password"
                 />
-                <button type="submit" class="password-button empty-button">
+                <app-button empty type="submit" class="password-button">
                   <fa-icon icon="arrow-right" />
-                </button>
+                </app-button>
               </form>
             </div>
             <div v-if="invalidPassword" class="warning-text invalid-password">
               Invalid password. Please try again
             </div>
             <div class="buttons">
-              <button class="empty-button" @click="importSeed">
+              <app-button empty @click="importSeed">
                 <fa-icon class="icon" icon="download" />Import Seed
-              </button>
-              <button class="empty-button" @click="newSeed">
+              </app-button>
+              <app-button empty @click="newSeed">
                 <fa-icon class="icon" icon="plus" />New Seed
-              </button>
+              </app-button>
             </div>
           </div>
           <div v-else-if="route === 'NewSeed'" class="new-seed-view">

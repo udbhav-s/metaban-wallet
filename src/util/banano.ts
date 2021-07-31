@@ -10,6 +10,9 @@ function toHex(buffer: Uint8Array) {
 }
 
 export const bananoUtil = {
+  defaultRep:
+    "ban_1ka1ium4pfue3uxtntqsrib8mumxgazsjf58gidh1xeo5te3whsq8z476goo",
+
   generateRandomSeed: (): string => {
     return toHex(crypto.getRandomValues(new Uint8Array(32)));
   },
@@ -46,23 +49,28 @@ export const bananoUtil = {
     );
   },
 
-  async loadAccountAtIndex(seed: string, index: number): Promise<BanAccount> {
-    const account = {} as BanAccount;
+  async getAccount(address: string): Promise<BanAccount> {
+    const account = { address } as BanAccount;
+    const info = await bananojs.getAccountInfo(address, true);
 
+    if (!info.error) {
+      account.opened = true;
+      account.representative = info.representative;
+      const balance = bananojs.getBananoPartsFromRaw(info.balance);
+      account.balance = `${balance.banano}.${balance.banoshi}`;
+    } else {
+      account.opened = false;
+    }
+
+    return account;
+  },
+
+  async loadAccountAtIndex(seed: string, index: number): Promise<BanAccount> {
     const privateKey = bananojs.getPrivateKey(seed, index);
     const publicKey = await bananojs.getPublicKey(privateKey);
 
     const address = bananojs.getBananoAccount(publicKey);
-    account.address = address;
-
-    const info = await bananojs.getAccountInfo(address);
-    if (!info.error) {
-      account.opened = true;
-      const balance = bananojs.getBananoPartsFromRaw(info.balance);
-      account.balance = `${balance.banano}.${balance.banoshi}`;
-    } else account.opened = false;
-
-    return account;
+    return await this.getAccount(address);
   },
 
   async loadAccounts(seed: string): Promise<BanAccount[]> {
@@ -77,5 +85,27 @@ export const bananoUtil = {
     }
 
     return banAccounts;
+  },
+
+  getAddressFromBlockHash(hash: string): string {
+    return bananojs.bananoUtil.getAccount(hash, "ban_");
+  },
+
+  async receiveBlock(
+    seed: string,
+    index: number,
+    hash: string,
+    rep?: string
+  ): Promise<string> {
+    return await bananojs.receiveBananoDepositsForSeed(
+      seed,
+      index,
+      rep ?? this.defaultRep,
+      hash
+    );
+  },
+
+  isAccountValid(address: string): boolean {
+    return bananojs.getBananoAccountValidationInfo(address).valid;
   },
 };

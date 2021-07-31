@@ -7,6 +7,12 @@ import {
   faArrowLeft,
   faArrowRight,
   faBars,
+  faExchangeAlt,
+  faTimesCircle,
+  faCircleNotch,
+  faArrowDown,
+  faCheck,
+  faSync,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -16,5 +22,11 @@ library.add(
   faCopy,
   faArrowLeft,
   faArrowRight,
-  faBars
+  faBars,
+  faExchangeAlt,
+  faTimesCircle,
+  faCircleNotch,
+  faArrowDown,
+  faCheck,
+  faSync
 );

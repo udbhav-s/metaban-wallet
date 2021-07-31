@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!accounts.length" class="banano-loader-container">
+    <div v-if="seed && !accounts.length" class="banano-loader-container">
       <banano-shape :loader="true" class="banano-loader" />
     </div>
     <div v-else>
@@ -31,8 +31,8 @@ export default defineComponent({
 
   setup() {
     const router = useRouter();
-    if (!storeUtil.getters.seed()) router.push("/");
 
+    const seed = computed(storeUtil.getters.seed);
     const accounts = computed(storeUtil.getters.accounts);
 
     // on accounts load push to default route if none
@@ -46,6 +46,7 @@ export default defineComponent({
     });
 
     return {
+      seed,
       accounts,
     };
   },

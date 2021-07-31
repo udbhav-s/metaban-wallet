@@ -35,19 +35,20 @@
           </div>
           <div v-if="invalidSeed" class="warning-text">Invalid Seed</div>
         </div>
-        <button
+        <app-button
           @click="setSeed"
           :disabled="(!importSeed && !seedDisclaimer) || (importSeed && !seed)"
-          class="continue-seed outlined-button"
+          outlined
+          class="continue-seed"
         >
           Continue with seed
-        </button>
+        </app-button>
       </div>
       <div v-else-if="viewPage === 'password'" key="password">
         <div class="back-arrow-container">
-          <button @click="backToSeed" class="empty-button">
+          <app-button @click="backToSeed" empty>
             <fa-icon icon="arrow-left" />
-          </button>
+          </app-button>
         </div>
         <div class="heading">Set a Password</div>
         <div class="field">
@@ -67,13 +68,13 @@
           Passwords do not match
         </div>
         <div class="field">
-          <button
+          <app-button
             @click="setPassword"
             :disabled="!password || password !== passwordCopy"
-            class="outlined-button"
+            outlined
           >
             Continue
-          </button>
+          </app-button>
         </div>
       </div>
     </transition>

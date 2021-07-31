@@ -1,42 +1,62 @@
 <template>
   <div class="sign">
-    <div class="secondary-text">
-      <template v-if="remoteUrl">
-        <span class="primary-yellow-text">{{ remoteUrl }}</span> requested
-      </template>
-    </div>
-    <div class="heading">
-      <template v-if="signData.type === 'hash'">Sign Hash</template>
-      <template v-else>Sign Transaction</template>
-    </div>
-    <div class="sign-contents">
-      {{ signData.type === "hash" ? signData.hash : signData.transaction }}
-    </div>
-    <div>
-      <select>
-        <option
-          v-for="(account, i) in accounts"
-          :value="i"
-          :key="account.address"
-        >
-          {{ account.address }}
-        </option>
-      </select>
-    </div>
-    <div>
-      <button @click="sign" class="outlined-button">Sign</button>
-    </div>
+    <transition name="slide-fade" mode="out-in">
+      <div class="success" v-if="transactionSuccessful">
+        <animated-check />
+        Success!
+      </div>
+      <div v-else>
+        <div class="secondary-text">
+          <template v-if="remoteUrl">
+            <span class="primary-yellow-text">{{ remoteUrl }}</span> requested
+          </template>
+        </div>
+        <div class="heading">
+          <template v-if="signData.type === 'hash'">Sign Hash</template>
+          <template v-else>Sign Transaction</template>
+        </div>
+        <div class="sign-contents">
+          {{ signData.type === "hash" ? signData.hash : signData.transaction }}
+        </div>
+        <div v-if="!hideAccountSelection">
+          <select>
+            <option
+              v-for="(account, i) in accounts"
+              :value="i"
+              :key="account.address"
+            >
+              {{ account.address }}
+            </option>
+          </select>
+        </div>
+        <div v-else class="with-address-container">
+          with
+          <span class="with-address secondary-text">{{
+            selectedAccount.address
+          }}</span>
+        </div>
+        <div>
+          <app-button @click="sign" :loading="transactionInProgress" outlined>
+            Sign
+          </app-button>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, PropType, ref, watch } from "vue";
+import { ref, computed, defineComponent, PropType } from "vue";
 import { SignData } from "@/types";
 import { bananoUtil } from "@/util/banano";
 import { storeUtil } from "@/store";
+import AnimatedCheck from "@/components/UI/AnimatedCheck.vue";
 
 export default defineComponent({
   name: "Sign",
+  components: {
+    AnimatedCheck,
+  },
   props: {
     signData: {
       type: Object as PropType<SignData>,
@@ -50,19 +70,25 @@ export default defineComponent({
       type: Number,
       required: false,
     },
+    hideAccountSelection: {
+      type: Boolean,
+      required: false,
+    },
   },
 
   setup(props, { emit }) {
     const accounts = computed(storeUtil.getters.accounts);
 
-    const selectedIndex = ref(storeUtil.getters.lastUsedIndex());
-    watch(props, (newProps) => {
-      if (newProps.index && newProps.index >= 0)
-        selectedIndex.value = newProps.index;
+    const selectedIndex = computed(() => {
+      return props.index === undefined
+        ? storeUtil.getters.lastUsedIndex()
+        : props.index;
     });
     const selectedAccount = computed(() => accounts.value[selectedIndex.value]);
 
-    const sign = () => {
+    const transactionSuccessful = ref(false);
+    const transactionInProgress = ref(false);
+    const sign = async () => {
       const index = selectedIndex.value;
 
       try {
@@ -73,17 +99,22 @@ export default defineComponent({
             index
           );
 
+          transactionSuccessful.value = true;
           emit("result", result);
         } else if (
           props.signData.type === "transaction" &&
           props.signData.transaction
         ) {
-          const result = bananoUtil.sendTransaction(
+          transactionInProgress.value = true;
+
+          const result = await bananoUtil.sendTransaction(
             props.signData.transaction,
             storeUtil.getters.seed(),
             index
           );
 
+          transactionInProgress.value = false;
+          transactionSuccessful.value = true;
           emit("result", result);
         }
       } catch (e) {
@@ -99,6 +130,8 @@ export default defineComponent({
       selectedAccount,
       accounts,
       sign,
+      transactionInProgress,
+      transactionSuccessful,
     };
   },
 });
@@ -111,6 +144,7 @@ export default defineComponent({
   background: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
   font-size: 1.2rem;
+  padding-bottom: 2rem;
 }
 
 .heading {
@@ -125,6 +159,7 @@ export default defineComponent({
   padding: 1rem;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
+  word-wrap: break-word;
 }
 
 .sign select {
@@ -138,5 +173,19 @@ export default defineComponent({
   text-overflow: ellipsis;
   background-color: rgba(255, 255, 255, 0.05);
   color: white;
+}
+
+.sign .with-address {
+  font-family: monospace;
+  word-wrap: break-word;
+  font-size: 1rem;
+}
+
+.sign .with-address-container {
+  margin-bottom: 1rem;
+}
+
+.sign .success {
+  padding: 1rem;
 }
 </style>

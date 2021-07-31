@@ -8,7 +8,12 @@
       <router-link to="/"><app-heading class="heading" /></router-link>
       <div class="sidebar-section">
         <div class="sidebar-heading">Accounts</div>
-        <div class="accounts-list">
+        <div v-if="!seed" class="login-button-container">
+          <app-button @click="login" outlined class="login-button">
+            Login
+          </app-button>
+        </div>
+        <div v-else class="accounts-list">
           <div
             v-for="account in accounts"
             :key="account.address"
@@ -54,6 +59,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
 
+    const seed = computed(storeUtil.getters.seed);
     const accounts = computed(storeUtil.getters.accounts);
     const address = computed(() => {
       const route = router.currentRoute.value;
@@ -77,12 +83,23 @@ export default defineComponent({
       });
     };
 
+    const login = () => {
+      router.push({
+        name: "Home",
+        query: {
+          redirect: router.currentRoute.value.fullPath,
+        },
+      });
+    };
+
     return {
+      seed,
       accounts,
       address,
       loadingNewAccount,
       addAccount,
       goToAccount,
+      login,
     };
   },
 });
@@ -199,6 +216,12 @@ export default defineComponent({
 
 .sidebar .add-account-button {
   margin-top: 0.5rem;
+  text-align: center;
+}
+
+.sidebar .login-button-container {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
   text-align: center;
 }
 </style>

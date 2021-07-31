@@ -2,6 +2,7 @@ import { storeUtil } from "@/store";
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
 import RemoteSign from "@/views/RemoteSign.vue";
+import NotFound from "@/views/NotFound.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -42,6 +43,9 @@ const routes: Array<RouteRecordRaw> = [
         props: (route) => ({
           address: route.params.banAddress,
         }),
+        meta: {
+          requiresAuth: false,
+        },
       },
     ],
   },
@@ -52,6 +56,11 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       requiresAuth: true,
     },
+  },
+  {
+    path: "/:catchAll(.*)",
+    name: "NotFound",
+    component: NotFound,
   },
 ];
 
